@@ -1,0 +1,2 @@
+E:/attendance_app_v1/android/app/.cxx/RelWithDebInfo/4r1t4734/x86_64/CMakeFiles/edit_cache.dir
+E:/attendance_app_v1/android/app/.cxx/RelWithDebInfo/4r1t4734/x86_64/CMakeFiles/rebuild_cache.dir

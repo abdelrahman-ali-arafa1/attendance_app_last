@@ -1,0 +1,2 @@
+E:/attendance_app_v1/android/app/.cxx/Debug/6v5j1f4d/armeabi-v7a/CMakeFiles/edit_cache.dir
+E:/attendance_app_v1/android/app/.cxx/Debug/6v5j1f4d/armeabi-v7a/CMakeFiles/rebuild_cache.dir

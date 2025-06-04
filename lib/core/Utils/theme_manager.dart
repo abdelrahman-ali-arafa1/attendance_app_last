@@ -44,7 +44,7 @@ class ThemeManager {
       cardTheme: CardTheme(
         color: Colors.white,
         elevation: 2,
-        shadowColor: Colors.black.withOpacity(0.1),
+        shadowColor: Colors.black.withAlpha(26),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -145,7 +145,7 @@ class ThemeManager {
       cardTheme: CardTheme(
         color: ColorsManager.darkCardColor,
         elevation: 2,
-        shadowColor: Colors.black.withOpacity(0.2),
+        shadowColor: Colors.black.withAlpha(51),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),

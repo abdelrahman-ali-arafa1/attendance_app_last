@@ -2,15 +2,11 @@ import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:animate_do/animate_do.dart';
-import 'package:attend_app/core/Utils/assets_manager.dart';
 import 'package:attend_app/core/Utils/colors_manager.dart';
-import 'package:attend_app/core/Utils/font_manager.dart';
-import 'package:attend_app/core/Utils/style_manager.dart';
 import 'package:attend_app/ui/layout/manager/attendance_cubit/attendance_state.dart';
 import 'package:attend_app/ui/layout/manager/attendance_cubit/attendance_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/Widget/custom_diaolg.dart';
 import '../../../core/modals/course_list_model.dart';
@@ -49,12 +45,12 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
     required bool isPositive,
   }) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha(26),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: color.withOpacity(0.2),
+          color: color.withAlpha(51),
           width: 1,
         ),
       ),
@@ -76,7 +72,7 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
               Icon(icon, color: color, size: 20),
             ],
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -96,7 +92,7 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                     color: color,
                     size: 16,
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(
                     trend,
                     style: TextStyle(
@@ -116,14 +112,13 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
 
   Widget _buildDivider(bool isDark) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 24),
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      margin: const EdgeInsets.symmetric(vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         height: 1,
         decoration: BoxDecoration(
-          color: isDark
-              ? Colors.white.withOpacity(0.1)
-              : Colors.grey.withOpacity(0.2),
+          color:
+              isDark ? Colors.white.withAlpha(26) : Colors.grey.withAlpha(51),
           borderRadius: BorderRadius.circular(1),
         ),
       ),
@@ -132,41 +127,28 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
 
   Widget _buildAttendanceCharts(
       BuildContext context, bool isDark, dynamic report) {
-    final totalStudents = (report?.present ?? 0) + (report?.absent ?? 0);
+    // Move calculations here to avoid duplication
+    final totalStudents = _calculateTotalStudents(report);
     final presentPercentage =
-        totalStudents > 0 ? (report?.present ?? 0) / totalStudents * 100 : 0.0;
+        _calculatePercentage(report?.present ?? 0, totalStudents);
     final absentPercentage =
-        totalStudents > 0 ? (report?.absent ?? 0) / totalStudents * 100 : 0.0;
+        _calculatePercentage(report?.absent ?? 0, totalStudents);
 
     return Column(
       children: [
         // Bar Chart
         Container(
           height: 300,
-          padding: EdgeInsets.fromLTRB(20, 20, 20, 44),
-          decoration: BoxDecoration(
-            color: isDark ? Colors.black12 : Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 44),
+          decoration: _getCommonDecoration(isDark),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Present vs Absent',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
+                style: _getTextStyle(isDark, size: 18, isBold: true),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                 child: BarChart(
                   BarChartData(
@@ -176,10 +158,10 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                         1.2,
                     titlesData: FlTitlesData(
                       show: true,
-                      rightTitles:
-                          AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      topTitles:
-                          AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      rightTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false)),
+                      topTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false)),
                       leftTitles: AxisTitles(
                         sideTitles: SideTitles(
                           showTitles: true,
@@ -241,9 +223,9 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                         barRods: [
                           BarChartRodData(
                             toY: (report?.present ?? 0).toDouble(),
-                            color: Color(0xFF4CAF50),
+                            color: const Color(0xFF4CAF50),
                             width: 40,
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(6),
                               topRight: Radius.circular(6),
                             ),
@@ -255,9 +237,9 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                         barRods: [
                           BarChartRodData(
                             toY: (report?.absent ?? 0).toDouble(),
-                            color: Color(0xFFFF5252),
+                            color: const Color(0xFFFF5252),
                             width: 40,
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(6),
                               topRight: Radius.circular(6),
                             ),
@@ -272,23 +254,13 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
           ),
         ),
 
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
 
         // Donut Chart
         Container(
           height: 250,
-          padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: isDark ? Colors.black12 : Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
+          padding: const EdgeInsets.all(20),
+          decoration: _getCommonDecoration(isDark),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -303,14 +275,14 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                           centerSpaceRadius: 60,
                           sections: [
                             PieChartSectionData(
-                              color: Color(0xFF4CAF50),
+                              color: const Color(0xFF4CAF50),
                               value: presentPercentage,
                               title: '',
                               radius: 20,
                               showTitle: false,
                             ),
                             PieChartSectionData(
-                              color: Color(0xFFFF5252),
+                              color: const Color(0xFFFF5252),
                               value: absentPercentage,
                               title: '',
                               radius: 20,
@@ -331,12 +303,12 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                               Container(
                                 width: 12,
                                 height: 12,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: Color(0xFF4CAF50),
                                   shape: BoxShape.circle,
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Text(
                                 'Present',
                                 style: TextStyle(
@@ -347,7 +319,7 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
                             '${report?.present ?? 0} actions',
                             style: TextStyle(
@@ -365,18 +337,18 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                               fontSize: 12,
                             ),
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Row(
                             children: [
                               Container(
                                 width: 12,
                                 height: 12,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: Color(0xFFFF5252),
                                   shape: BoxShape.circle,
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Text(
                                 'Absent',
                                 style: TextStyle(
@@ -387,7 +359,7 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
                             '${report?.absent ?? 0} actions',
                             style: TextStyle(
@@ -418,11 +390,320 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
     );
   }
 
+  // Helper methods to avoid duplicate calculations
+  int _calculateTotalStudents(dynamic report) {
+    return (report?.present ?? 0) + (report?.absent ?? 0);
+  }
+
+  double _calculatePercentage(int value, int total) {
+    return total > 0 ? (value / total * 100) : 0.0;
+  }
+
+  // Helper methods for commonly used text styles
+  TextStyle _getTextStyle(bool isDark,
+      {bool isBold = false, double size = 14.0, bool isSecondary = false}) {
+    Color textColor;
+    if (isSecondary) {
+      textColor = isDark ? Colors.white70 : Colors.grey.shade600;
+    } else {
+      textColor = isDark ? Colors.white : Colors.black87;
+    }
+
+    return TextStyle(
+      fontSize: size,
+      fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
+      color: textColor,
+    );
+  }
+
+  // Helper method for common decoration
+  BoxDecoration _getCommonDecoration(bool isDark,
+      {Color? borderColor, double borderRadius = 16}) {
+    return BoxDecoration(
+      color: isDark ? Colors.black12 : Colors.white,
+      borderRadius: BorderRadius.circular(borderRadius),
+      border: borderColor != null ? Border.all(color: borderColor) : null,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withAlpha(13),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    );
+  }
+
+  // Helper method for retry button used in both error and no data states
+  Widget _buildRetryButton(AttendanceViewModel viewModel) {
+    return ElevatedButton.icon(
+      onPressed: () {
+        final courses = CourseListModel().coursesList;
+        if (courses.isNotEmpty) {
+          viewModel.fetchAttendanceData(courses[0].id.toString());
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: ColorsManager.primaryColor,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+      ),
+      icon: const Icon(Icons.refresh),
+      label: const Text("إعادة المحاولة"),
+    );
+  }
+
+  // Fix the error and no data states to use the new method
+  Widget _buildErrorState(AttendanceViewModel viewModel, String message) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.error_outline,
+            color: ColorsManager.redColor,
+            size: 48,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            message,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 24),
+          _buildRetryButton(viewModel),
+        ],
+      ),
+    );
+  }
+
+  // Helper method for the loading state
+  Widget _buildLoadingState(bool isDark) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircularProgressIndicator(
+            color: ColorsManager.primaryColor,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            "Loading attendance data...",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: isDark
+                  ? ColorsManager.darkTextPrimary
+                  : ColorsManager.lightTextPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method for course dropdown
+  Widget _buildCourseDropdown(bool isDark, List<dynamic> courses) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.black12 : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDark ? Colors.white24 : Colors.grey.shade300,
+        ),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          isExpanded: true,
+          value: _selectedCourseId,
+          items: courses.map((course) {
+            return DropdownMenuItem<String>(
+              value: course.id,
+              child: Text(
+                course.courseName ?? 'Unknown Course',
+                style: _getTextStyle(isDark, size: 16),
+              ),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              setState(() {
+                _selectedCourseId = newValue;
+              });
+              context.read<AttendanceViewModel>().fetchAttendanceData(newValue);
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  // Helper method for the calendar button
+  Widget _buildCalendarButton(bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.black12 : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDark ? Colors.white24 : Colors.grey.shade300,
+        ),
+      ),
+      child: Icon(
+        Icons.calendar_today,
+        color: isDark ? Colors.white : Colors.black87,
+      ),
+    );
+  }
+
+  // Helper method for attendance list item
+  Widget _buildAttendanceListItem(dynamic attendance, bool isDark) {
+    final student = attendance?.student;
+    final isPresent = attendance?.attendanceStatus == 'present';
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: isDark
+                ? Colors.white.withAlpha(143)
+                : Colors.black.withAlpha(143),
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: isPresent
+                  ? Colors.green.withAlpha(143)
+                  : Colors.red.withAlpha(143),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              isPresent ? Icons.check_circle : Icons.cancel,
+              color: isPresent ? Colors.green : Colors.red,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  student?.name ?? 'Unknown Student',
+                  style: _getTextStyle(isDark, size: 16),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'ID: ${student?.id ?? 'N/A'}',
+                  style: _getTextStyle(isDark, isSecondary: true, size: 14),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
+            decoration: BoxDecoration(
+              color: isPresent
+                  ? Colors.green.withAlpha(143)
+                  : Colors.red.withAlpha(143),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              isPresent ? 'Present' : 'Absent',
+              style: TextStyle(
+                color: isPresent ? Colors.green : Colors.red,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method to build the entire attendance list section
+  Widget _buildAttendanceListSection(dynamic report, bool isDark) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? Colors.black12 : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDark ? Colors.white24 : Colors.grey.shade300,
+        ),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Attendance List',
+                  style: _getTextStyle(isDark, size: 18, isBold: true),
+                ),
+                TextButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      _showFullList = !_showFullList;
+                    });
+                  },
+                  icon: Icon(
+                    _showFullList ? Icons.visibility_off : Icons.visibility,
+                  ),
+                  label: Text(
+                    _showFullList ? 'Show Less' : 'Show All',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _showFullList
+                ? report?.attendances?.length
+                : report?.attendances?.length.clamp(0, 5),
+            itemBuilder: (context, index) {
+              final attendance = report?.attendances?[index];
+              return _buildAttendanceListItem(attendance, isDark);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method for no matching records found
+  Widget _buildNoRecordsFound(bool isDark) {
+    return Center(
+      child: Text(
+        'No matching records found',
+        style: TextStyle(
+          color: isDark ? Colors.white70 : Colors.black54,
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = context.read<AttendanceViewModel>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final Size screenSize = MediaQuery.of(context).size;
 
     return BlocConsumer<AttendanceViewModel, AttendanceState>(
       listener: (context, state) {
@@ -441,27 +722,7 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
       },
       builder: (context, state) {
         if (state is LoadingAttendanceState || state is UpdateLoadingState) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(
-                  color: ColorsManager.primaryColor,
-                ),
-                SizedBox(height: 16),
-                Text(
-                  "Loading attendance data...",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: isDark
-                        ? ColorsManager.darkTextPrimary
-                        : ColorsManager.lightTextPrimary,
-                  ),
-                ),
-              ],
-            ),
-          );
+          return _buildLoadingState(isDark);
         }
 
         if ((state is SuccessAttendanceState ||
@@ -487,84 +748,29 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Header with Course Selection
                       FadeInDown(
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         child: Row(
                           children: [
                             Expanded(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 16),
-                                decoration: BoxDecoration(
-                                  color: isDark ? Colors.black12 : Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: isDark
-                                        ? Colors.white24
-                                        : Colors.grey.shade300,
-                                  ),
-                                ),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton<String>(
-                                    isExpanded: true,
-                                    value: _selectedCourseId,
-                                    items: courses.map((course) {
-                                      return DropdownMenuItem<String>(
-                                        value: course.id,
-                                        child: Text(
-                                          course.courseName ?? 'Unknown Course',
-                                          style: TextStyle(
-                                            color: isDark
-                                                ? Colors.white
-                                                : Colors.black87,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (String? newValue) {
-                                      if (newValue != null) {
-                                        setState(() {
-                                          _selectedCourseId = newValue;
-                                        });
-                                        viewModel.fetchAttendanceData(newValue);
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
+                              child: _buildCourseDropdown(isDark, courses),
                             ),
-                            SizedBox(width: 12),
-                            Container(
-                              padding: EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: isDark ? Colors.black12 : Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: isDark
-                                      ? Colors.white24
-                                      : Colors.grey.shade300,
-                                ),
-                              ),
-                              child: Icon(
-                                Icons.calendar_today,
-                                color: isDark ? Colors.white : Colors.black87,
-                              ),
-                            ),
+                            const SizedBox(width: 12),
+                            _buildCalendarButton(isDark),
                           ],
                         ),
                       ),
 
-                      SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
                       // Statistics Cards
                       FadeInUp(
-                        duration: Duration(milliseconds: 600),
+                        duration: const Duration(milliseconds: 600),
                         child: Column(
                           children: [
                             _buildStatCard(
@@ -575,7 +781,7 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                               icon: Icons.analytics,
                               isPositive: false,
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             Row(
                               children: [
                                 Expanded(
@@ -589,7 +795,7 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                                     isPositive: true,
                                   ),
                                 ),
-                                SizedBox(width: 16),
+                                const SizedBox(width: 16),
                                 Expanded(
                                   child: _buildStatCard(
                                     title: 'Absent',
@@ -607,11 +813,11 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                         ),
                       ),
 
-                      SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
                       // Replace the old trend chart with new charts
                       FadeInUp(
-                        duration: Duration(milliseconds: 700),
+                        duration: const Duration(milliseconds: 700),
                         child: _buildAttendanceCharts(context, isDark, report),
                       ),
 
@@ -620,176 +826,13 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                       // Attendance List
                       if (report?.attendances?.isNotEmpty == true)
                         FadeInUp(
-                          duration: Duration(milliseconds: 1000),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: isDark ? Colors.black12 : Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: isDark
-                                    ? Colors.white24
-                                    : Colors.grey.shade300,
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Attendance List',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: isDark
-                                              ? Colors.white
-                                              : Colors.black87,
-                                        ),
-                                      ),
-                                      TextButton.icon(
-                                        onPressed: () {
-                                          setState(() {
-                                            _showFullList = !_showFullList;
-                                          });
-                                        },
-                                        icon: Icon(
-                                          _showFullList
-                                              ? Icons.visibility_off
-                                              : Icons.visibility,
-                                        ),
-                                        label: Text(
-                                          _showFullList
-                                              ? 'Show Less'
-                                              : 'Show All',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: _showFullList
-                                      ? report?.attendances?.length
-                                      : report?.attendances?.length.clamp(0, 5),
-                                  itemBuilder: (context, index) {
-                                    final attendance =
-                                        report?.attendances?[index];
-                                    final student = attendance?.student;
-                                    final isPresent =
-                                        attendance?.attendanceStatus ==
-                                            'present';
-
-                                    return Container(
-                                      padding: EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
-                                        border: Border(
-                                          bottom: BorderSide(
-                                            color: isDark
-                                                ? Colors.white12
-                                                : Colors.grey.shade200,
-                                          ),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: isPresent
-                                                  ? Colors.green
-                                                      .withOpacity(0.1)
-                                                  : Colors.red.withOpacity(0.1),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            child: Icon(
-                                              isPresent
-                                                  ? Icons.check_circle
-                                                  : Icons.cancel,
-                                              color: isPresent
-                                                  ? Colors.green
-                                                  : Colors.red,
-                                              size: 24,
-                                            ),
-                                          ),
-                                          SizedBox(width: 16),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  student?.name ??
-                                                      'Unknown Student',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: isDark
-                                                        ? Colors.white
-                                                        : Colors.black87,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 4),
-                                                Text(
-                                                  'ID: ${student?.id ?? 'N/A'}',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: isDark
-                                                        ? Colors.white60
-                                                        : Colors.black54,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 12,
-                                              vertical: 6,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: isPresent
-                                                  ? Colors.green
-                                                      .withOpacity(0.1)
-                                                  : Colors.red.withOpacity(0.1),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: Text(
-                                              isPresent ? 'Present' : 'Absent',
-                                              style: TextStyle(
-                                                color: isPresent
-                                                    ? Colors.green
-                                                    : Colors.red,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
+                          duration: const Duration(milliseconds: 1000),
+                          child: _buildAttendanceListSection(report, isDark),
                         )
                       else
                         FadeInUp(
-                          duration: Duration(milliseconds: 800),
-                          child: Center(
-                            child: Text(
-                              'No matching records found',
-                              style: TextStyle(
-                                color: isDark ? Colors.white70 : Colors.black54,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
+                          duration: const Duration(milliseconds: 800),
+                          child: _buildNoRecordsFound(isDark),
                         ),
                     ],
                   ),
@@ -806,87 +849,11 @@ class _AttendanceTabScreenState extends State<AttendanceTabScreen> {
                     ? state.report
                     : viewModel.report) ==
                 null) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.info_outline,
-                  color: ColorsManager.primaryColor,
-                  size: 48,
-                ),
-                SizedBox(height: 16),
-                Text(
-                  "لا توجد بيانات حضور",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 24),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    final courses = CourseListModel().coursesList;
-                    if (courses.isNotEmpty) {
-                      viewModel.fetchAttendanceData(courses[0].id.toString());
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorsManager.primaryColor,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  icon: const Icon(Icons.refresh),
-                  label: const Text("إعادة المحاولة"),
-                ),
-              ],
-            ),
-          );
+          return _buildErrorState(viewModel, "لا توجد بيانات حضور");
         }
 
         // Error state
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                color: ColorsManager.redColor,
-                size: 48,
-              ),
-              SizedBox(height: 16),
-              Text(
-                "حدث خطأ أثناء تحميل البيانات",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 24),
-              ElevatedButton.icon(
-                onPressed: () {
-                  final courses = CourseListModel().coursesList;
-                  if (courses.isNotEmpty) {
-                    viewModel.fetchAttendanceData(courses[0].id.toString());
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ColorsManager.primaryColor,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                icon: const Icon(Icons.refresh),
-                label: const Text("إعادة المحاولة"),
-              ),
-            ],
-          ),
-        );
+        return _buildErrorState(viewModel, "حدث خطأ أثناء تحميل البيانات");
       },
     );
   }

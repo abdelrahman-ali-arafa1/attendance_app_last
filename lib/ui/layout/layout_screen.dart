@@ -84,8 +84,8 @@ class _LayoutScreenState extends State<LayoutScreen> {
           return Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: PageTransition(
-              child: viewModel.tabs[viewModel.currentIndex],
               type: PageTransitionType.fade,
+              child: viewModel.tabs[viewModel.currentIndex],
             ),
             extendBody: true,
             bottomNavigationBar: Container(
@@ -95,7 +95,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
                 color: isDark ? ColorsManager.darkCardColor : Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withAlpha(26),
                     blurRadius: 20,
                     offset: const Offset(0, 5),
                   ),
@@ -233,11 +233,6 @@ class PageTransition extends StatelessWidget {
         );
       case PageTransitionType.slideUp:
         return SlideInUp(
-          duration: duration,
-          child: child,
-        );
-      default:
-        return FadeIn(
           duration: duration,
           child: child,
         );

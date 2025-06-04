@@ -38,5 +38,4 @@ class MyBlocObserver extends BlocObserver {
     super.onClose(bloc);
     log('onClose -- ${bloc.runtimeType}');
   }
-
 }

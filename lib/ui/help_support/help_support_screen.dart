@@ -67,7 +67,7 @@ class HelpSupportScreen extends StatelessWidget {
         boxShadow: [
           if (!isDark)
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withAlpha(26),
               spreadRadius: 1,
               blurRadius: 5,
               offset: const Offset(0, 3),
@@ -132,7 +132,7 @@ class HelpSupportScreen extends StatelessWidget {
         boxShadow: [
           if (!isDark)
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withAlpha(26),
               spreadRadius: 1,
               blurRadius: 5,
               offset: const Offset(0, 3),
@@ -198,7 +198,7 @@ class HelpSupportScreen extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: ColorsManager.primaryColor.withOpacity(0.1),
+                color: ColorsManager.primaryColor.withAlpha(26),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -262,6 +262,8 @@ class HelpSupportScreen extends StatelessWidget {
             isDark ? Colors.white : Colors.black87,
           ),
         ),
+        iconColor: ColorsManager.primaryColor,
+        collapsedIconColor: isDark ? Colors.white54 : Colors.black54,
         children: [
           Padding(
             padding: EdgeInsets.all(16.w),
@@ -275,8 +277,6 @@ class HelpSupportScreen extends StatelessWidget {
             ),
           ),
         ],
-        iconColor: ColorsManager.primaryColor,
-        collapsedIconColor: isDark ? Colors.white54 : Colors.black54,
       ),
     );
   }

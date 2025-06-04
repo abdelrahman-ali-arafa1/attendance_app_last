@@ -1,6 +1,4 @@
-
 import 'package:dio/dio.dart';
-
 
 abstract class DioFailure {
   final String errorMessage;
@@ -21,7 +19,7 @@ class ServerFailure extends DioFailure {
         return ServerFailure('receive timeout with apiServer');
       case DioExceptionType.badCertificate:
       case DioExceptionType.badResponse:
-        return ServerFailure.BadfromResponse(
+        return ServerFailure.badFromResponse(
             dioError.response!.statusCode!, dioError.response!.data);
       case DioExceptionType.cancel:
         return ServerFailure('Requst to ApiServer was canceld');
@@ -29,22 +27,21 @@ class ServerFailure extends DioFailure {
         return ServerFailure('no internet connection ,please try again');
       case DioExceptionType.unknown:
         return ServerFailure('Unexpected error ,please try later!');
-      default:
-        return ServerFailure('Opps there was an error ,please try again');
     }
   }
 
-  factory ServerFailure.BadfromResponse(int statusCode, dynamic response) {
-    if ((statusCode == 400 || statusCode == 401 || statusCode == 403 ||statusCode==404)) {
+  factory ServerFailure.badFromResponse(int statusCode, dynamic response) {
+    if ((statusCode == 400 ||
+        statusCode == 401 ||
+        statusCode == 403 ||
+        statusCode == 404)) {
       return ServerFailure(response["message"]);
-    }else if (statusCode ==409){
+    } else if (statusCode == 409) {
       return ServerFailure("Account Already Exists");
-    }
-    else if (statusCode == 404) {
+    } else if (statusCode == 404) {
       return ServerFailure('Your request not found please try again later!');
     } else if (statusCode == 500) {
       return ServerFailure('Internal server error, please try again later!');
-
     }
     // else if (statusCode ==409){
     //   return ServerFailure("Account Already Exists");

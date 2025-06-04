@@ -4,8 +4,8 @@ import 'package:attend_app/core/Errors/dio_error.dart';
 import 'package:attend_app/core/Services/shared_preference_services.dart';
 import 'package:attend_app/core/Utils/constant_manager.dart';
 import 'package:attend_app/data/data_source/layout_remote_data_source.dart';
-import 'package:attend_app/domain/entity/QRCodeResponseEntity.dart';
-import 'package:attend_app/domain/entity/ReportAttendanceReportEntity.dart';
+import 'package:attend_app/domain/entity/qr_code_response_entity.dart';
+import 'package:attend_app/domain/entity/report_attendance_report_entity.dart';
 import 'package:attend_app/domain/repository/layout_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -18,22 +18,22 @@ class LayoutRepositoryImpl implements LayoutRepository {
   final LayoutRemoteDataSource _layoutRemoteDataSource;
 
   @override
-  Future<Either<DioFailure, QrCodeResponseEntity>> sendQR
-      (String studentId, String sessionId, String attendanceStatus) async {
+  Future<Either<DioFailure, QrCodeResponseEntity>> sendQR(
+      String studentId, String sessionId, String attendanceStatus) async {
     var response = await _layoutRemoteDataSource.sendQR(
         studentId, sessionId, attendanceStatus);
-    log(SharedPreferenceServices.getData(AppConstants.token.toString()).toString());
-  log("Bearer ${SharedPreferenceServices.getData(AppConstants.token).toString()}");
-  log(response.toString());
+    log(SharedPreferenceServices.getData(AppConstants.token.toString())
+        .toString());
+    log("Bearer ${SharedPreferenceServices.getData(AppConstants.token).toString()}");
+    log(response.toString());
     try {
       if (response.statusCode == 200) {
         var data = QrCodeResponseEntity.fromJson(response.data);
         log(data.toString());
         return Right(data);
-      }
-      else {
+      } else {
         return Left(
-            ServerFailure.BadfromResponse(response.statusCode!, response.data));
+            ServerFailure.badFromResponse(response.statusCode!, response.data));
       }
     } catch (e, s) {
       log(s.toString());
@@ -49,17 +49,17 @@ class LayoutRepositoryImpl implements LayoutRepository {
   }
 
   @override
-  Future<Either<DioFailure, ReportAttendanceReportEntity>> getAttendance(String courseId) async{
-    var response=await _layoutRemoteDataSource.getAttendance(courseId);
+  Future<Either<DioFailure, ReportAttendanceReportEntity>> getAttendance(
+      String courseId) async {
+    var response = await _layoutRemoteDataSource.getAttendance(courseId);
     log(response.toString());
     try {
-      if (response.statusCode==200){
-        var data=ReportAttendanceReportEntity.fromJson(response.data);
+      if (response.statusCode == 200) {
+        var data = ReportAttendanceReportEntity.fromJson(response.data);
         return Right(data);
-      }
-      else {
+      } else {
         return Left(
-            ServerFailure.BadfromResponse(response.statusCode!, response.data));
+            ServerFailure.badFromResponse(response.statusCode!, response.data));
       }
     } catch (e, s) {
       log(s.toString());

@@ -1,11 +1,12 @@
-import 'package:attend_app/domain/entity/QRCodeResponseEntity.dart';
+import 'package:attend_app/domain/entity/qr_code_response_entity.dart';
 
 class ReportAttendanceReportEntity {
   ReportAttendanceReportEntity({
-      this.resutl, 
-      this.attendances, 
-      this.absent, 
-      this.present,});
+    this.resutl,
+    this.attendances,
+    this.absent,
+    this.present,
+  });
 
   ReportAttendanceReportEntity.fromJson(dynamic json) {
     resutl = json['resutl'];
@@ -22,27 +23,28 @@ class ReportAttendanceReportEntity {
   List<Attendances>? attendances;
   num? absent;
   num? present;
-
 }
 
 class Attendances {
   Attendances({
-      this.id, 
-      this.attendanceStatus, 
-      this.student, 
-      this.course,});
+    this.id,
+    this.attendanceStatus,
+    this.student,
+    this.course,
+  });
 
   Attendances.fromJson(dynamic json) {
     id = json['_id'];
     attendanceStatus = json['attendanceStatus'];
-    student = json['student'] != null ? StudentEntity.fromJson(json['student']) : null;
-    course = json['courseId'] != null ? CourseEntity.fromJson(json['courseId']) : null;
+    student = json['student'] != null
+        ? StudentEntity.fromJson(json['student'])
+        : null;
+    course = json['courseId'] != null
+        ? CourseEntity.fromJson(json['courseId'])
+        : null;
   }
   String? id;
   String? attendanceStatus;
   StudentEntity? student;
   CourseEntity? course;
-
-
 }
-

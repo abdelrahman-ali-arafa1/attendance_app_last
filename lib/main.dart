@@ -8,7 +8,6 @@ import 'package:attend_app/ui/login_screen/login_screen_view.dart';
 import 'package:attend_app/core/Services/shared_preference_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:attend_app/ui/help_support/help_support_screen.dart';
 
 // إنشاء GlobalKey للوصول إلى حالة MyApp من أي مكان

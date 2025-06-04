@@ -53,10 +53,24 @@ class LoginRepositoryImpl implements LoginRepository {
         await SharedPreferenceServices.saveData(
             AppConstants.studentId, data.data!.id.toString());
         log(data.data!.id.toString());
+
+        // حفظ المعلومات الأكاديمية الإضافية
+        if (data.data?.department != null) {
+          await SharedPreferenceServices.saveData(
+              'department', data.data?.department);
+        }
+        if (data.data?.level != null) {
+          await SharedPreferenceServices.saveData('level', data.data?.level);
+        }
+        if (data.data?.semester != null) {
+          await SharedPreferenceServices.saveData(
+              'semester', data.data?.semester);
+        }
+
         return Right(data);
       } else {
         return Left(
-            ServerFailure.BadfromResponse(response.statusCode!, response.data));
+            ServerFailure.badFromResponse(response.statusCode!, response.data));
       }
     } catch (e, s) {
       log(s.toString());

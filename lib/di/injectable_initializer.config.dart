@@ -14,7 +14,7 @@ import 'package:injectable/injectable.dart' as _i526;
 import '../core/Services/api_manager.dart' as _i694;
 import '../data/data_source/layout_remote_data_source.dart' as _i961;
 import '../data/data_source/login_remote_data_source.dart' as _i990;
-import '../data/repository_impl/Layout_repository_impl.dart' as _i891;
+import '../data/repository_impl/layout_repository_impl.dart' as _i940;
 import '../data/repository_impl/login_repository_impl.dart' as _i458;
 import '../domain/repository/layout_repository.dart' as _i493;
 import '../domain/repository/login_repository.dart' as _i719;
@@ -44,7 +44,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i719.LoginRepository>(
         () => _i458.LoginRepositoryImpl(gh<_i990.LoginRemoteDataSource>()));
     gh.factory<_i493.LayoutRepository>(
-        () => _i891.LayoutRepositoryImpl(gh<_i961.LayoutRemoteDataSource>()));
+        () => _i940.LayoutRepositoryImpl(gh<_i961.LayoutRemoteDataSource>()));
     gh.factory<_i772.LoginUseCase>(
         () => _i772.LoginUseCase(gh<_i719.LoginRepository>()));
     gh.factory<_i403.LoginViewModel>(

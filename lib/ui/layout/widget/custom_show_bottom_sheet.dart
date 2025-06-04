@@ -1,14 +1,12 @@
 import 'package:attend_app/core/Utils/colors_manager.dart';
 import 'package:attend_app/di/injectable_initializer.dart';
-import 'package:attend_app/domain/entity/ReportAttendanceReportEntity.dart';
-import 'package:attend_app/ui/layout/manager/attendance_cubit/attendance_view_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:attend_app/core/modals/course_list_model.dart';
+import 'package:attend_app/ui/layout/manager/attendance_cubit/attendance_view_model.dart';
 
 import '../../../core/Utils/font_manager.dart';
 import '../../../core/Utils/style_manager.dart';
-import '../../../core/modals/course_list_model.dart';
 
 class CustomShowBottomSheet extends StatelessWidget {
   CustomShowBottomSheet({
@@ -39,8 +37,7 @@ class CustomShowBottomSheet extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                getIt<AttendanceViewModel>()
-                    .updateIndex(index);
+                getIt<AttendanceViewModel>().updateIndex(index);
               });
             },
             child: Padding(

@@ -83,7 +83,7 @@ class ScanQrScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha(13),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -92,8 +92,8 @@ class ScanQrScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ImageIcon(
-              const AssetImage(IconAssets.scanIcon),
+            const ImageIcon(
+              AssetImage(IconAssets.scanIcon),
               size: 24,
               color: ColorsManager.primaryColor,
             ),
@@ -187,7 +187,7 @@ class ScanQrScreen extends StatelessWidget {
                   ),
 
                   // Scanner Overlay Animation
-                  AnimatedScannerOverlay(),
+                  const AnimatedScannerOverlay(),
                 ],
               ),
             ),
@@ -205,7 +205,7 @@ class ScanQrScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withAlpha(13),
                     blurRadius: 10,
                     offset: const Offset(0, 2),
                   ),
@@ -216,10 +216,10 @@ class ScanQrScreen extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(10.w),
                     decoration: BoxDecoration(
-                      color: ColorsManager.primaryColor.withOpacity(0.1),
+                      color: ColorsManager.primaryColor.withAlpha(26),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.info_outline,
                       color: ColorsManager.primaryColor,
                       size: 24,
@@ -279,7 +279,7 @@ class ScanQrScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withAlpha(13),
                     blurRadius: 10,
                     offset: const Offset(0, 5),
                   ),
@@ -352,7 +352,7 @@ class ScanQrScreen extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
             decoration: BoxDecoration(
-              color: ColorsManager.primaryColor.withOpacity(0.1),
+              color: ColorsManager.primaryColor.withAlpha(26),
               borderRadius: BorderRadius.circular(30),
             ),
             child: Text(
@@ -382,7 +382,7 @@ class ScanQrScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withAlpha(13),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -464,7 +464,7 @@ class ScanQrScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withAlpha(13),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -473,7 +473,7 @@ class ScanQrScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              const Icon(
                 Icons.error_outline,
                 color: ColorsManager.redColor,
                 size: 80,

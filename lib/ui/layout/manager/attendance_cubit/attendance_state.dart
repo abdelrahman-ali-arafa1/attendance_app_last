@@ -1,23 +1,22 @@
-import 'package:attend_app/domain/entity/ReportAttendanceReportEntity.dart';
+import 'package:attend_app/domain/entity/report_attendance_report_entity.dart';
 
-sealed class AttendanceState {
+sealed class AttendanceState {}
 
-}
-class LoadingAttendanceState extends AttendanceState {
+class LoadingAttendanceState extends AttendanceState {}
 
-}
 class SuccessAttendanceState extends AttendanceState {
   ReportAttendanceReportEntity report;
   SuccessAttendanceState(this.report);
 }
+
 class ErrorAttendanceState extends AttendanceState {
   String errMessage;
   ErrorAttendanceState(this.errMessage);
 }
-class UpdateAttendanceIndexState extends AttendanceState{
+
+class UpdateAttendanceIndexState extends AttendanceState {
   ReportAttendanceReportEntity report;
   UpdateAttendanceIndexState(this.report);
 }
-class UpdateLoadingState extends AttendanceState{
 
-}
+class UpdateLoadingState extends AttendanceState {}

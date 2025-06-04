@@ -3,15 +3,11 @@ import 'dart:math' as math;
 
 import 'package:animate_do/animate_do.dart';
 import 'package:attend_app/core/Utils/assets_manager.dart';
-import 'package:attend_app/core/Utils/colors_manager.dart';
 import 'package:attend_app/core/Utils/font_manager.dart';
-import 'package:attend_app/core/Utils/style_manager.dart';
 import 'package:attend_app/core/routes_manager/page_routes.dart';
 import 'package:attend_app/core/Services/shared_preference_services.dart';
 import 'package:attend_app/core/Utils/constant_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -25,7 +21,6 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _rotateAnimation;
-  late Animation<double> _opacityAnimation;
   bool _showElements = false;
 
   @override
@@ -49,16 +44,6 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0.0, 0.5, curve: Curves.easeInOut),
-      ),
-    );
-
-    _opacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.3, 1.0, curve: Curves.easeIn),
       ),
     );
 
@@ -107,12 +92,12 @@ class _SplashScreenState extends State<SplashScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: isDark
-                ? [
+                ? const [
                     Color(0xFF2E3192),
                     Color(0xFF662D91),
                     Color(0xFF23ACA2),
                   ]
-                : [
+                : const [
                     Color(0xFF6A3DE8),
                     Color(0xFF5E3AD3),
                     Color(0xFF23ACA2),
@@ -128,24 +113,23 @@ class _SplashScreenState extends State<SplashScreen>
                 final size = 60.0 + (index % 3) * 30.0;
                 final posX = (index % 4) * (screenSize.width / 4);
                 final posY = (index ~/ 4) * (screenSize.height / 6) + 50.0;
-                final delay = (index * 200);
 
                 return Positioned(
                   left: posX,
                   top: posY,
                   child: AnimatedOpacity(
                     opacity: _showElements ? 0.2 : 0.0,
-                    duration: Duration(milliseconds: 1000),
+                    duration: const Duration(milliseconds: 1000),
                     curve: Curves.easeInOut,
                     child: AnimatedContainer(
-                      duration: Duration(milliseconds: 2000),
+                      duration: const Duration(milliseconds: 2000),
                       curve: Curves.easeInOut,
                       width: _showElements ? size : 0,
                       height: _showElements ? size : 0,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(
                             index % 2 == 0 ? size : size / 4),
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withAlpha(51),
                       ),
                     ),
                   ),
@@ -170,11 +154,11 @@ class _SplashScreenState extends State<SplashScreen>
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: isDark
-                                    ? Colors.white.withOpacity(0.15)
-                                    : Colors.white.withOpacity(0.2),
+                                    ? Colors.white.withAlpha(38)
+                                    : Colors.white.withAlpha(51),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
+                                    color: Colors.black.withAlpha(26),
                                     blurRadius: 30,
                                     spreadRadius: 5,
                                   ),
@@ -207,7 +191,7 @@ class _SplashScreenState extends State<SplashScreen>
                             return LinearGradient(
                               colors: [
                                 Colors.white,
-                                Colors.white.withOpacity(0.8)
+                                Colors.white.withAlpha(204),
                               ],
                             ).createShader(bounds);
                           },
@@ -266,7 +250,7 @@ class _SplashScreenState extends State<SplashScreen>
                       style: TextStyle(
                         fontSize: screenSize.width * 0.035,
                         fontWeight: FontWeight.w400,
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withAlpha(178),
                         fontFamily: FontFamily.fontFamily,
                       ),
                     ),
@@ -298,7 +282,7 @@ class _LoadingIndicatorState extends State<_LoadingIndicator>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 1500),
     )..repeat();
   }
 
@@ -332,7 +316,7 @@ class _LoadingPainter extends CustomPainter {
   final Animation<double> animation;
   final Color color;
 
-  _LoadingPainter({required this.animation, required this.color});
+  const _LoadingPainter({required this.animation, required this.color});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -350,7 +334,7 @@ class _LoadingPainter extends CustomPainter {
       final phase = (animation.value - (i / 8)) % 1.0;
       final opacity = (1.0 - phase) % 1.0;
 
-      paint.color = color.withOpacity(opacity);
+      paint.color = color.withAlpha((opacity * 255).toInt());
 
       final x = center.dx + radius * 0.7 * math.cos(angle);
       final y = center.dy + radius * 0.7 * math.sin(angle);

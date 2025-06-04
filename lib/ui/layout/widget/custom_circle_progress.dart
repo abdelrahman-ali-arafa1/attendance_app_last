@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -14,9 +13,9 @@ class CircleProgress extends StatelessWidget {
       width: 350.w,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: ColorsManager.greenColor.withOpacity(.36),
+        color: ColorsManager.greenColor.withAlpha(92),
       ),
-      child:  Column(
+      child: Column(
         children: [
           SizedBox(height: 10.h),
           Text(
@@ -24,14 +23,10 @@ class CircleProgress extends StatelessWidget {
             style: TextStyle(
                 fontSize: 22.sp,
                 fontWeight: FontWeight.w800,
-                color: ColorsManager.greenColor
-            ),
+                color: ColorsManager.greenColor),
           ),
           SizedBox(height: 10.h),
-          const Divider(
-              thickness: 2,
-              color: ColorsManager.greenColor
-          ),
+          const Divider(thickness: 2, color: ColorsManager.greenColor),
           SizedBox(height: 10.h),
           Center(
             child: Stack(
@@ -40,7 +35,7 @@ class CircleProgress extends StatelessWidget {
                 SizedBox(
                   width: 180.w,
                   height: 180.h,
-                  child:const CircularProgressIndicator(
+                  child: const CircularProgressIndicator(
                     value: .70, // 95%
                     strokeWidth: 12,
                     backgroundColor: ColorsManager.redColor,
@@ -54,8 +49,7 @@ class CircleProgress extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 24.sp,
                       fontWeight: FontWeight.bold,
-                      color: ColorsManager.whiteColor
-                  ),
+                      color: ColorsManager.whiteColor),
                 ),
               ],
             ),
